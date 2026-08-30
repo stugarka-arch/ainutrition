@@ -1,0 +1,277 @@
+
+:root {
+    // Violet spectrum
+    --bb-violet-300: #c4b5fd;
+    --bb-violet-400: #a78bfa;
+    --bb-violet-500: #8b5cf6;
+    --bb-violet-600: #7c3aed;
+    --bb-violet-700: #6d28d9;
+
+    // Pink spectrum
+    --bb-pink-400: #f472b6;
+    --bb-pink-500: #ec4899;
+    --bb-pink-600: #db2777;
+
+    // Cyan spectrum
+    --bb-cyan-400: #22d3ee;
+    --bb-cyan-500: #06b6d4;
+
+    // Semantic error
+    --bb-error: #f87171;
+    --bb-error-border: rgba(239, 68, 68, 0.6);
+
+    // ── Brand gradients (shared across themes) ───────────────────
+    --bb-gradient-brand: linear-gradient(90deg, var(--bb-violet-600), var(--bb-pink-600));
+    --bb-gradient-logo: linear-gradient(135deg, var(--bb-violet-500), var(--bb-pink-500));
+    --bb-gradient-tagline: linear-gradient(90deg, var(--bb-violet-400), var(--bb-pink-400));
+    --bb-gradient-card-glow: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(236, 72, 153, 0.05));
+
+    // ── Typography ───────────────────────────────────────────────
+    --bb-font-display: 'Syne', sans-serif;
+    --bb-font-body: inherit;
+
+    // ── Radius ───────────────────────────────────────────────────
+    --bb-radius-sm: 8px;
+    --bb-radius-md: 12px;
+    --bb-radius-lg: 16px;
+    --bb-radius-xl: 24px;
+    --bb-radius-card: 32px;
+    --bb-radius-logo: 16px;
+
+    // ── Transitions ──────────────────────────────────────────────
+    --bb-transition-fast: 0.2s ease;
+    --bb-transition-normal: 0.25s ease;
+    --bb-transition-slow: 0.3s ease;
+}
+
+// ════════════════════════════════════════════════════════════
+//  DARK THEME  (default — applied on :root / [data-theme="dark"])
+// ════════════════════════════════════════════════════════════
+:root,
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    // Backgrounds
+    --bb-bg-page: #0a0a0f;
+    --bb-bg-card: rgba(255, 255, 255, 0.03);
+    --bb-bg-input: rgba(255, 255, 255, 0.05);
+    --bb-bg-tab-bar: rgba(255, 255, 255, 0.05);
+    --bb-bg-icon-box: rgba(255, 255, 255, 0.07);
+    --bb-bg-icon-box-active: rgba(139, 92, 246, 0.25);
+    --bb-bg-role-card: rgba(255, 255, 255, 0.03);
+    --bb-bg-role-card-hover: rgba(139, 92, 246, 0.06);
+    --bb-bg-role-card-active: rgba(124, 58, 237, 0.12);
+    --bb-bg-select-option: #1a1a2e;
+
+    // Borders
+    --bb-border-card: 1px solid rgba(255, 255, 255, 0.10);
+    --bb-border-input: rgba(255, 255, 255, 0.10);
+    --bb-border-input-focus: rgba(139, 92, 246, 0.60);
+    --bb-border-tab-bar: rgba(255, 255, 255, 0.10);
+    --bb-border-role-card: rgba(255, 255, 255, 0.10);
+    --bb-border-role-card-hover: rgba(139, 92, 246, 0.40);
+    --bb-border-role-card-active: var(--bb-violet-600);
+    --bb-border-dot: rgba(255, 255, 255, 0.20);
+
+    // Shadows
+    --bb-shadow-card: 0 8px 32px rgba(0, 0, 0, 0.50);
+    --bb-shadow-logo: 0 0 30px rgba(139, 92, 246, 0.50);
+    --bb-shadow-logo-pulse: 0 0 50px rgba(139, 92, 246, 0.90);
+    --bb-shadow-mobile-logo: 0 0 20px rgba(139, 92, 246, 0.40);
+    --bb-shadow-tab: 0 0 15px rgba(139, 92, 246, 0.50);
+    --bb-shadow-btn: 0 0 20px rgba(139, 92, 246, 0.40);
+    --bb-shadow-input-focus: rgba(139, 92, 246, 0.15);
+    --bb-shadow-role-active: 0 0 20px rgba(124, 58, 237, 0.2), inset 0 0 30px rgba(124, 58, 237, 0.05);
+    --bb-shadow-dot-active: 0 0 6px rgba(139, 92, 246, 0.80);
+    --bb-shadow-bar1: 0 0 15px rgba(139, 92, 246, 0.80);
+    --bb-shadow-bar2: 0 0 15px rgba(236, 72, 153, 0.80);
+    --bb-shadow-bar3: 0 0 15px rgba(6, 182, 212, 0.80);
+
+    // Text
+    --bb-text-primary: #ffffff;
+    --bb-text-secondary: #9ca3af;
+    --bb-text-muted: #6b7280;
+    --bb-text-placeholder: #4b5563;
+    --bb-text-tab-active: #ffffff;
+    --bb-text-tab-inactive: #6b7280;
+    --bb-text-tab-hover: #d1d5db;
+    --bb-text-card-name: #e5e7eb;
+    --bb-text-card-desc: #6b7280;
+    --bb-text-icon: #6b7280;
+    --bb-text-icon-active: var(--bb-violet-400);
+    --bb-text-logo: #ffffff;
+    --bb-text-shadow-logo: rgba(255, 255, 255, 0.30);
+
+    // Orbs / particles
+    --bb-orb1-bg: rgba(139, 92, 246, 0.20);
+    --bb-orb2-bg: rgba(236, 72, 153, 0.15);
+    --bb-orb3-bg: rgba(6, 182, 212, 0.15);
+    --bb-particle-lg: rgba(255, 255, 255, 0.40);
+    --bb-particle-sm: rgba(255, 255, 255, 0.20);
+    --bb-grid-line: rgba(255, 255, 255, 0.04);
+}
+
+// ════════════════════════════════════════════════════════════
+//  LIGHT THEME  ([data-theme="light"])
+// ════════════════════════════════════════════════════════════
+[data-theme="light"] {
+    color-scheme: light;
+
+    // Backgrounds
+    --bb-bg-page: #f3f0ff;
+    --bb-bg-card: rgba(255, 255, 255, 0.80);
+    --bb-bg-input: rgba(255, 255, 255, 0.90);
+    --bb-bg-tab-bar: rgba(139, 92, 246, 0.08);
+    --bb-bg-icon-box: rgba(139, 92, 246, 0.10);
+    --bb-bg-icon-box-active: rgba(139, 92, 246, 0.20);
+    --bb-bg-role-card: rgba(255, 255, 255, 0.70);
+    --bb-bg-role-card-hover: rgba(139, 92, 246, 0.08);
+    --bb-bg-role-card-active: rgba(124, 58, 237, 0.10);
+    --bb-bg-select-option: #ffffff;
+
+    // Borders
+    --bb-border-card: 1px solid rgba(139, 92, 246, 0.20);
+    --bb-border-input: rgba(139, 92, 246, 0.25);
+    --bb-border-input-focus: rgba(124, 58, 237, 0.70);
+    --bb-border-tab-bar: rgba(139, 92, 246, 0.20);
+    --bb-border-role-card: rgba(139, 92, 246, 0.20);
+    --bb-border-role-card-hover: rgba(124, 58, 237, 0.50);
+    --bb-border-role-card-active: var(--bb-violet-600);
+    --bb-border-dot: rgba(124, 58, 237, 0.30);
+
+    // Shadows
+    --bb-shadow-card: 0 8px 40px rgba(124, 58, 237, 0.12);
+    --bb-shadow-logo: 0 0 30px rgba(139, 92, 246, 0.35);
+    --bb-shadow-logo-pulse: 0 0 50px rgba(139, 92, 246, 0.60);
+    --bb-shadow-mobile-logo: 0 0 20px rgba(139, 92, 246, 0.25);
+    --bb-shadow-tab: 0 0 15px rgba(139, 92, 246, 0.30);
+    --bb-shadow-btn: 0 0 20px rgba(139, 92, 246, 0.25);
+    --bb-shadow-input-focus: rgba(139, 92, 246, 0.10);
+    --bb-shadow-role-active: 0 0 20px rgba(124, 58, 237, 0.12), inset 0 0 30px rgba(124, 58, 237, 0.04);
+    --bb-shadow-dot-active: 0 0 6px rgba(139, 92, 246, 0.50);
+    --bb-shadow-bar1: 0 0 15px rgba(139, 92, 246, 0.60);
+    --bb-shadow-bar2: 0 0 15px rgba(236, 72, 153, 0.60);
+    --bb-shadow-bar3: 0 0 15px rgba(6, 182, 212, 0.60);
+
+    // Text
+    --bb-text-primary: #1a0533;
+    --bb-text-secondary: #4b5563;
+    --bb-text-muted: #6b7280;
+    --bb-text-placeholder: #9ca3af;
+    --bb-text-tab-active: #ffffff;
+    --bb-text-tab-inactive: #7c3aed;
+    --bb-text-tab-hover: #4c1d95;
+    --bb-text-card-name: #1a0533;
+    --bb-text-card-desc: #6b7280;
+    --bb-text-icon: #7c3aed;
+    --bb-text-icon-active: var(--bb-violet-600);
+    --bb-text-logo: #1a0533;
+    --bb-text-shadow-logo: rgba(124, 58, 237, 0.15);
+
+    // Orbs / particles
+    --bb-orb1-bg: rgba(139, 92, 246, 0.15);
+    --bb-orb2-bg: rgba(236, 72, 153, 0.10);
+    --bb-orb3-bg: rgba(6, 182, 212, 0.10);
+    --bb-particle-lg: rgba(124, 58, 237, 0.35);
+    --bb-particle-sm: rgba(124, 58, 237, 0.15);
+    --bb-grid-line: rgba(124, 58, 237, 0.05);
+
+    // Override card inner glow for light
+    --bb-gradient-card-glow: linear-gradient(135deg, rgba(139, 92, 246, 0.04), rgba(236, 72, 153, 0.04));
+}
+
+// ════════════════════════════════════════════════════════════
+//  React-Toastify overrides
+// ════════════════════════════════════════════════════════════
+
+.Toastify__toast-container {
+    top: 24px !important;
+    right: 24px !important;
+}
+
+.Toastify__toast {
+    background: #13111f !important;
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+    border-radius: 14px !important;
+    backdrop-filter: blur(16px) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+    padding: 14px 16px !important;
+    font-family: 'Syne', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #e5e7eb !important;
+    min-height: unset !important;
+}
+
+.Toastify__toast--success {
+    border-color: rgba(139, 92, 246, 0.35) !important;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(13, 11, 31, 0.98)) !important;
+}
+
+.Toastify__toast--success .Toastify__toast-icon svg {
+    fill: #a78bfa !important;
+}
+
+.Toastify__toast--error {
+    border-color: rgba(239, 68, 68, 0.35) !important;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(13, 11, 31, 0.98)) !important;
+}
+
+.Toastify__toast--error .Toastify__toast-icon svg {
+    fill: #f87171 !important;
+}
+
+.Toastify__toast--warning {
+    border-color: rgba(251, 191, 36, 0.35) !important;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.10), rgba(13, 11, 31, 0.98)) !important;
+}
+
+.Toastify__progress-bar--success {
+    background: linear-gradient(90deg, #7c3aed, #ec4899) !important;
+}
+
+.Toastify__progress-bar--error {
+    background: #f87171 !important;
+}
+
+.Toastify__progress-bar--warning {
+    background: #fbbf24 !important;
+}
+
+.Toastify__close-button {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+    align-self: center !important;
+}
+
+.Toastify__close-button:hover {
+    color: #e5e7eb !important;
+}
+
+// Light theme
+[data-theme="light"] {
+    .Toastify__toast {
+        background: rgba(255, 255, 255, 0.92) !important;
+        border-color: rgba(139, 92, 246, 0.20) !important;
+        color: #1a0533 !important;
+        box-shadow: 0 8px 32px rgba(124, 58, 237, 0.12) !important;
+    }
+
+    .Toastify__toast--success {
+        border-color: rgba(124, 58, 237, 0.30) !important;
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(255, 255, 255, 0.96)) !important;
+    }
+
+    .Toastify__toast--error {
+        border-color: rgba(239, 68, 68, 0.30) !important;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(255, 255, 255, 0.96)) !important;
+    }
+
+    .Toastify__close-button {
+        color: #6b7280 !important;
+    }
+
+    .Toastify__close-button:hover {
+        color: #1a0533 !important;
+    }
+}
