@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  GUEST
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(GUEST)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions Session[]
+  passwordResetTokens PasswordResetToken[]
+
+  // Profile
+  age    Int?
+  gender String?
+  weight Float?
+  height Float?
+
+  // Daily goals
+  dailyCalorieGoal Int @default(2000)
+  proteinGoal      Int @default(150)
+  fatGoal          Int @default(65)
+  carbGoal         Int @default(200)
+
+  // Dietary preferences
+  dietaryPrefs         String[] @default([])
+  notificationsEnabled Boolean  @default(true)
+
+  // Relations
+  subscription Subscription?
+  meals        Meal[]
+  analysisLogs AnalysisLog[]
+
+  @@map("users")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Subscription {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  user User @relation( fields: [userId], references: [id], onDelete: Cascade)
+
+  plan                 String   @default("free")
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  trialStartedAt       DateTime?
+  trialEndsAt          DateTime?
+  activeUntil          DateTime?
+  status               String   @default("inactive")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("subscriptions")
+}
+
+model Meal {
+  id     String @id @default(cuid())
+  userId String
+
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade )
+
+  // Basic information
+  mealType String
+  mealName String
+
+  // Macronutrients
+  calories Float
+  protein  Float
+  fat      Float
+  carbs    Float
+
+  // Optional nutritional values
+  fiber  Float?
+  sugar  Float?
+  sodium Float?
+
+  // AI analysis
+  glycemicIndex          Int?
+  insulinResistanceLevel String?
+  macroBalance           Float?
+  overallConfidence      Float?
+
+  // Plate context
+  plateDiameterCm Float?
+  plateHeightCm   Float?
+  fillPercentage  Float?
+
+  // User information
+  notes String?
+
+  // Photo
+  photoLink String?
+
+  // Flags
+  aiGenerated   Boolean @default(true)
+  userCorrected Boolean @default(false)
+
+  // Date
+  date DateTime @db.Date
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  foodItems      MealFoodItem[]
+  micronutrients MealMicronutrient[]
+  insights       MealInsight[]
+
+  @@index([userId])
+  @@index([date])
+  @@index([userId, date])
+  @@map("meals")
+}
+
+model MealFoodItem {
+  id     String @id @default(cuid())
+  mealId String
+
+  meal Meal @relation( fields: [mealId], references: [id], onDelete: Cascade )
+
+  name           String
+  estimatedGrams Float
+  confidence     Float
+  description    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([mealId])
+  @@map("meal_food_items")
+}
+
+model MealMicronutrient {
+  id     String @id @default(cuid())
+  mealId String
+
+  meal Meal @relation(fields: [mealId], references: [id], onDelete: Cascade )
+
+  name                   String
+  value                  Float
+  unit                   String
+  percentageDailyValue   Float?
+
+  createdAt DateTime @default(now())
+
+  @@index([mealId])
+  @@index([name])
+  @@map("meal_micronutrients")
+}
+
+model MealInsight {
+  id     String @id @default(cuid())
+  mealId String
+
+  meal Meal @relation(fields: [mealId],references: [id],onDelete: Cascade)
+
+  text String
+
+  createdAt DateTime @default(now())
+
+  @@index([mealId])
+  @@map("meal_insights")
+}
+
+model AnalysisLog {
+  id     String @id @default(cuid())
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade )
+
+  requestTime Int
+  imageSize   Int
+
+  success      Boolean @default(false)
+  errorMessage String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("analysis_logs")
+}
