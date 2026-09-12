@@ -1,0 +1,127 @@
+.nutrition-summary {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto 24px;
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    background: var(--color-surface);
+    box-shadow: var(--shadow);
+}
+
+.nutrition-summary__header,
+.nutrition-summary__filters,
+.nutrition-summary__extra,
+.nutrition-summary__micros > div {
+    display: flex;
+    gap: 12px;
+}
+
+.nutrition-summary__header {
+    justify-content: space-between;
+    align-items: start;
+    flex-wrap: wrap;
+
+    h2 { margin: 0 0 6px; color: var(--color-text); }
+    p { margin: 0; color: var(--color-text-secondary); }
+}
+
+.nutrition-summary__filters {
+    align-items: end;
+    flex-wrap: wrap;
+
+    label {
+        display: grid;
+        gap: 4px;
+        color: var(--color-text-secondary);
+        font-size: 13px;
+    }
+
+    input {
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 8px;
+        background: var(--color-input);
+        color: var(--color-text);
+    }
+}
+
+.nutrition-summary__period,
+.nutrition-summary__status { color: var(--color-text-secondary); }
+.nutrition-summary__error { color: var(--color-danger); }
+
+.nutrition-summary__goals {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.nutrition-summary__goal {
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--color-background);
+
+    > div:first-child { display: flex; justify-content: space-between; gap: 8px; }
+    span, small { color: var(--color-text-secondary); }
+    strong { color: var(--color-text); }
+    small { display: block; margin-top: 6px; }
+}
+
+.nutrition-summary__progress {
+    height: 8px;
+    margin-top: 12px;
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--color-border);
+
+    span { display: block; height: 100%; border-radius: inherit; background: var(--color-primary); }
+}
+
+.nutrition-summary__extra,
+.nutrition-summary__micros { margin-top: 20px; flex-wrap: wrap; color: var(--color-text-secondary); }
+.nutrition-summary__recommend-button { margin-top: 24px; }
+.nutrition-summary__recommendations {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 14px;
+    background: var(--color-background);
+    color: var(--color-text-secondary);
+
+    h3 { margin: 0 0 10px; color: var(--color-text); }
+    > p { margin: 0; line-height: 1.5; }
+}
+.nutrition-summary__tomorrow-targets { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+.nutrition-summary__tomorrow-targets span { padding: 6px 10px; border-radius: 999px; background: var(--color-surface); color: var(--color-text); }
+.nutrition-summary__tips { margin: 0; padding-left: 20px; }
+.nutrition-summary__tips li + li { margin-top: 6px; }
+.nutrition-summary__menu { display: grid; gap: 12px; margin-top: 18px; }
+.nutrition-summary__menu article { padding: 14px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface); }
+.nutrition-summary__menu article > div { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.nutrition-summary__menu span { color: var(--color-primary); font-size: 13px; font-weight: 600; }
+.nutrition-summary__menu strong { color: var(--color-text); }
+.nutrition-summary__menu small { color: var(--color-text-secondary); }
+.nutrition-summary__menu p { margin: 8px 0 0; line-height: 1.45; }
+.nutrition-summary__meals {
+    margin-top: 20px;
+
+    h3 { margin: 0 0 10px; color: var(--color-text); }
+    p { margin: 0; color: var(--color-text-secondary); }
+    ul { margin: 0; padding: 0; list-style: none; }
+    li {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-top: 1px solid var(--color-border);
+        color: var(--color-text-secondary);
+    }
+    strong { color: var(--color-text); white-space: nowrap; }
+}
+.nutrition-summary__micros h3 { width: 100%; margin: 0; color: var(--color-text); }
+.nutrition-summary__micros > div { flex-wrap: wrap; }
+.nutrition-summary__micros span { padding: 7px 10px; border-radius: 999px; background: var(--color-background); color: var(--color-text-secondary); }
+
+@media (max-width: 600px) {
+    .nutrition-summary { padding: 18px; }
+    .nutrition-summary__goals { grid-template-columns: 1fr; }
+}

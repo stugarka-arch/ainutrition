@@ -1,21 +1,30 @@
 import { Navigate, Outlet } from "react-router-dom";
-import type { Role } from "../interfaces/user/Role";
+import { Role } from "../interfaces/user/Role";
 
 type Props = {
-    userRole: Role | null;       // роль користувача (може бути null, якщо не авторизований)
-    allowedRoles: Role[];        // масив дозволених ролей
-    redirectTo?: string;         // куди редіректити якщо доступ заборонений
+    userRole: Role | null;
+    allowedRoles: Role[];
+    redirectTo?: string;
 };
 
 const RoleGuard = ({ userRole, allowedRoles, redirectTo = "/" }: Props) => {
-    // якщо користувач не авторизований або його роль не дозволена
-    console.log('userRole- ', userRole);
-    console.log('allowedRoles- ', allowedRoles);
-    if (!userRole || !allowedRoles.includes(userRole)) {
+    console.log("🔍 RoleGuard:");
+    console.log("  userRole:", userRole);
+    console.log("  allowedRoles:", allowedRoles);
+
+    // ⚠️ Якщо userRole = null - редірект на login
+    if (!userRole) {
+        console.log("❌ No user role");
+        return <Navigate to="/auth" replace />;
+    }
+
+    // ✅ Перевіряємо чи роль в дозволених
+    if (!allowedRoles.includes(userRole)) {
+        console.log(`❌ Role "${userRole}" not allowed. Allowed: ${allowedRoles}`);
         return <Navigate to={redirectTo} replace />;
     }
 
-    // роль дозволена → рендеримо дочірні маршрути
+    console.log("✅ Access granted");
     return <Outlet />;
 };
 

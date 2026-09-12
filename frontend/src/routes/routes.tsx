@@ -3,27 +3,32 @@
 import AdminPage from "../pages/AdminPage ";
 import AuthPage from "../pages/AuthPage";
 import ClientPage from "../pages/ClientPage";
+import FoodAnalysisPage from "../pages/FoodAnalysisPage";
 import HomePage from "../pages/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
+import NutritionSummary from "../components/NutritionSummary";
 
 
 
 // Публічні маршрути
 export const publicRoutes = [
-    { path: "/", element: <HomePage /> },
-    { path: "/auth", element: <AuthPage /> },
+    { path: "/", label: "Головна", element: <HomePage /> },
+    { path: "/auth", label: "Авторизація", element: <AuthPage /> },
+    { path: "/food-analysis", label: "Аналіз їжі", element: <FoodAnalysisPage /> },
+
 ];
 
 // Клієнтські маршрути
 export const clientRoutes = [
-    { path: "/dashboard-client", element: <ClientPage /> },
+    { path: "/dashboard-client", label: "Кабінет", element: <ClientPage /> },
+    { path: "/nutrition-summary", label: "Підсумок харчування", element: <NutritionSummary /> },
 ];
 
 
 
 // Адмін
 export const adminRoutes = [
-    { path: "/admin", element: <AdminPage /> },
+    { path: "/admin", label: "Адмінпанель", element: <AdminPage /> },
 ];
 
 // 404

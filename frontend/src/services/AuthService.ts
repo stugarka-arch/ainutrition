@@ -10,6 +10,12 @@ type AuthResponse = {
     user: IUser;
 };
 
+type MeResponse = {
+    user: IUser | null;
+};
+
+type MessageResponse = { message: string };
+
 const authService = {
     async register(userData: ISignUp): Promise<AuthResponse> {
         try {
@@ -60,9 +66,9 @@ const authService = {
         }
     } ,
 
-    async me(): Promise<AuthResponse> {
+    async me(): Promise<MeResponse> {
         try {
-            const { data } = await apiService.get<AuthResponse>(
+            const { data } = await apiService.get<MeResponse>(
                 "/auth/me",
             );
 
@@ -81,6 +87,15 @@ const authService = {
 
     async logout(): Promise<void> {
         await apiService.post("/auth/logout");
+    },
+
+    async forgotPassword(email: string): Promise<string> {
+        const { data } = await apiService.post<MessageResponse>("/auth/forgot-password", { email });
+        return data.message;
+    },
+
+    async resetPassword(token: string, password: string): Promise<void> {
+        await apiService.post("/auth/reset-password", { token, password });
     },
 };
 

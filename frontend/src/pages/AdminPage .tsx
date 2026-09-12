@@ -1,14 +1,10 @@
 
-interface Props {
-
-}
-
-const AdminPage = (props: Props) => {
+const AdminPage = () => {
     return (
         <div>
 
         </div>
-    )
-}
+    );
+};
 
-export default AdminPage 
+export default AdminPage

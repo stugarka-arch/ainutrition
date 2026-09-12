@@ -1,5 +1,20 @@
 # React + TypeScript + Vite
 
+## Deployment to Vercel
+
+The root [`vercel.json`](../vercel.json) builds `frontend` and rewrites all routes to
+`index.html`, so direct visits to React Router pages work correctly.
+
+Before deploying, add this environment variable in the Vercel project settings:
+
+```text
+VITE_API_BASE=https://your-backend-domain
+```
+
+The NestJS backend must be deployed separately and configured to allow requests
+from the Vercel frontend domain. For local development, copy `.env.example` to
+`.env.local` and replace the value with `http://localhost:3000`.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

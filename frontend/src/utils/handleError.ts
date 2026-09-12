@@ -10,7 +10,10 @@ export function handleError(err: unknown, customMessage?: string) {
     if (err instanceof AxiosError && err.response) {
         const contentType = err.response.headers["content-type"];
 
-        if (contentType?.includes("application/json")) {
+        if (
+            typeof contentType === "string" &&
+            contentType.includes("application/json")
+        ) {
             const data = err.response.data;
 
             if (data?.email) {
