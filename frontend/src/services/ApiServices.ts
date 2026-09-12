@@ -4,7 +4,7 @@ import axios, {
     type InternalAxiosRequestConfig,
 } from "axios";
 
-const baseURL = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
+const baseURL = import.meta.env.VITE_API_BASE || 'https://ainutrition-r4w8.onrender.com';
 
 
 const apiService: AxiosInstance = axios.create({

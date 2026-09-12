@@ -8,7 +8,10 @@ import cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:5173', // ← порт твого фронту (Vite зазвичай 5173)
+    origin: [
+      'http://localhost:5173',
+      'https://www.aifood.pp.ua',
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -37,7 +40,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   const port = process.env.PORT || 3000;
-  const host = process.env.HOST || 'localhost';
+  const host = '0.0.0.0';
 
   await app.listen(port, () => {
     Logger.log(`🚀 Server running on http://${host}:${port}`, 'Bootstrap');
