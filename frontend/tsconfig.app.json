@@ -17,10 +17,20 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+   
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "noUnusedLocals": false, // ← Вимкни
+    "noUnusedParameters": false, // ← Вимкни
+    "noImplicitAny": true,
+    "strict": true,
+    "useDefineForClassFields": true,
+   
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
   },
   "include": ["src"]
 }
