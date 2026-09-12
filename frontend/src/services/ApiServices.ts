@@ -4,7 +4,7 @@ import axios, {
     type InternalAxiosRequestConfig,
 } from "axios";
 
-const baseURL = import.meta.env.VITE_API_BASE;
+const baseURL = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
 
 
 const apiService: AxiosInstance = axios.create({
