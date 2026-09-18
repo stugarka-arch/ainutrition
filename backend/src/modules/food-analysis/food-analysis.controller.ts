@@ -53,7 +53,6 @@ export class FoodAnalysisController {
     private readonly foodAnalysis: FoodAnalysisService,
   ) { }
 
-  // Отримує харчову статистику користувача за вказаний день або період.
   @Get('summary')
   @ApiOperation({
     summary: 'Get nutrition summary for a day or date range',
@@ -74,7 +73,6 @@ export class FoodAnalysisController {
     );
   }
 
-  // Генерує персональні рекомендації та меню на наступний день.
   @Post('recommendations')
   @ApiOperation({
     summary: 'Generate personalized recommendations and tomorrow menu',
@@ -94,7 +92,6 @@ export class FoodAnalysisController {
     );
   }
 
-  // Приймає фото їжі та додатковий контекст, перевіряє дані й передає їх у сервіс для AI-аналізу.
   @Post('analyze-with-context')
   @UseInterceptors(
     FileInterceptor('photo', {
