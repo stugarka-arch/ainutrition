@@ -1,3 +1,4 @@
+
 import {
     BadRequestException,
     Injectable,
@@ -25,26 +26,32 @@ export class FoodAnalysisService {
         private readonly prisma: PrismaService,
     ) { }
 
+    // Формує загальну статистику харчування користувача за вибраний період.
     async getNutritionSummary(
         userId: string,
         startDateValue?: string,
         endDateValue?: string,
     ): Promise<NutritionSummaryDto> {
+
+        // Перевіряємо та перетворюємо передані дати у Date.
         const startDate = this.parseDate(startDateValue, 'startDate');
         const endDate = this.parseDate(
             endDateValue ?? startDateValue,
             'endDate',
         );
 
+        // Перевіряємо, щоб кінцева дата не була раніше початкової.
         if (endDate < startDate) {
             throw new BadRequestException(
                 'endDate must be on or after startDate',
             );
         }
 
+        // Робимо кінцеву дату виключною, щоб включити весь останній день.
         const endExclusive = new Date(endDate);
         endExclusive.setUTCDate(endExclusive.getUTCDate() + 1);
 
+        // Одночасно отримуємо цілі користувача та його прийоми їжі з бази.
         const [user, meals] = await Promise.all([
             this.prisma.user.findUnique({
                 where: { id: userId },
@@ -85,17 +92,21 @@ export class FoodAnalysisService {
             }),
         ]);
 
+        // Перевіряємо, що користувач існує.
         if (!user) {
             throw new BadRequestException('User not found');
         }
 
+        // Створюємо початкові структури для підрахунку загальних і щоденних показників.
         const totals = this.createEmptyTotals();
         const dailyMap = new Map<string, DailyNutritionSummaryDto>();
         const micronutrientMap = new Map<string, NutritionMicronutrientDto>();
 
+        // Обробляємо кожен прийом їжі та додаємо його показники до статистики.
         for (const meal of meals) {
             this.addMealToTotals(totals, meal);
 
+            // Групуємо прийоми їжі за календарною датою.
             const date = meal.date.toISOString().slice(0, 10);
             const daily = dailyMap.get(date) ?? {
                 date,
@@ -106,8 +117,9 @@ export class FoodAnalysisService {
             this.addMealToTotals(daily.totals, meal);
             dailyMap.set(date, daily);
 
+            // Об'єднуємо однакові мікронутрієнти з усіх прийомів їжі.
             for (const micronutrient of meal.micronutrients) {
-                const key = `${micronutrient.name}:${micronutrient.unit}`;
+                const key = `${ micronutrient.name }:${ micronutrient.unit } `;
                 const current = micronutrientMap.get(key) ?? {
                     name: micronutrient.name,
                     unit: micronutrient.unit,
@@ -124,6 +136,7 @@ export class FoodAnalysisService {
             }
         }
 
+        // Розраховуємо кількість днів і загальні цілі користувача за весь період.
         const days = Math.round(
             (endDate.getTime() - startDate.getTime()) / 86_400_000,
         ) + 1;
@@ -134,6 +147,7 @@ export class FoodAnalysisService {
             carbohydrates: user.carbGoal * days,
         };
 
+        // Формуємо та повертаємо готовий об'єкт статистики для frontend.
         return {
             startDate: startDate.toISOString().slice(0, 10),
             endDate: endDate.toISOString().slice(0, 10),
@@ -163,20 +177,25 @@ export class FoodAnalysisService {
         };
     }
 
+    // Отримує статистику харчування та передає її AI для генерації рекомендацій.
     async getDietRecommendations(
         userId: string,
         startDate?: string,
         endDate?: string,
     ): Promise<DietRecommendationDto> {
+
+        // Спочатку отримуємо статистику харчування за потрібний період.
         const summary = await this.getNutritionSummary(
             userId,
             startDate,
             endDate,
         );
 
+        // Передаємо статистику Gemini для формування персональних рекомендацій.
         return this.geminiVision.generateDietRecommendations(summary);
     }
 
+    // Аналізує їжу через AI та зберігає результат аналізу в базі даних.
     async analyzeMealWithContext(
         userId: string,
         imageBuffer: Buffer | undefined,
@@ -191,9 +210,12 @@ export class FoodAnalysisService {
         notes?: string,
         mimeType?: string,
     ): Promise<MealAnalysisResultDto> {
+
+        // Запам'ятовуємо час початку аналізу для розрахунку тривалості.
         const startTime = Date.now();
 
         try {
+            // Об'єднуємо всю додаткову інформацію про їжу в один контекст для AI.
             const context = {
                 plateDiameterCm: plateDiameter,
                 plateHeightCm: plateHeight,
@@ -202,6 +224,7 @@ export class FoodAnalysisService {
                 notes,
             };
 
+            // Якщо є фото — аналізуємо його, інакше аналізуємо текстовий опис.
             const aiResponse = imageBuffer
                 ? await this.geminiVision.analyzeFood(
                     imageBuffer,
@@ -213,19 +236,21 @@ export class FoodAnalysisService {
                     notes!,
                 );
 
+            // Перевіряємо, що AI повернув усі необхідні дані.
             this.validateAiResponse(aiResponse);
 
+            // Розраховуємо час виконання AI-аналізу.
             const processingTime =
                 Date.now() - startTime;
 
             /*
-             * Створюємо всі записи в одній транзакції.
-             *
-             * Якщо будь-яка операція впаде,
-             * Prisma відкотить усі попередні записи.
+             * Зберігаємо Meal та всі пов'язані дані
+             * в одній транзакції бази даних.
              */
             await this.prisma.$transaction(
                 async (tx) => {
+
+                    // Створюємо основний запис прийому їжі.
                     const meal =
                         await tx.meal.create({
                             data: {
@@ -286,7 +311,8 @@ export class FoodAnalysisService {
                         });
 
                     /*
-                     * Зберігаємо всі продукти.
+                     * Зберігаємо визначені AI продукти,
+                     * якщо хоча б один продукт був знайдений.
                      */
                     if (
                         aiResponse.foodItems.length >
@@ -318,7 +344,8 @@ export class FoodAnalysisService {
                     }
 
                     /*
-                     * Зберігаємо мікронутрієнти.
+                     * Зберігаємо мікронутрієнти,
+                     * які AI визначив для цього прийому їжі.
                      */
                     if (
                         aiResponse
@@ -350,7 +377,7 @@ export class FoodAnalysisService {
                     }
 
                     /*
-                     * Зберігаємо рекомендації.
+                     * Зберігаємо AI-рекомендації та інсайти для цього прийому їжі.
                      */
                     if (
                         aiResponse.insights.length >
@@ -375,12 +402,8 @@ export class FoodAnalysisService {
             );
 
             /*
-             * Frontend отримує той самий результат,
-             * який прийшов від Gemini.
-             *
-             * Ми не повертаємо Prisma Meal,
-             * оскільки frontend вже очікує
-             * IMealAnalysisResult.
+             * Повертаємо frontend результат AI
+             * разом із параметрами тарілки та часом обробки.
              */
             return {
                 ...aiResponse,
@@ -391,12 +414,15 @@ export class FoodAnalysisService {
                 processingTime,
             };
         } catch (error: unknown) {
+
+            // Повторно передаємо помилки BadRequestException без змін.
             if (
                 error instanceof BadRequestException
             ) {
                 throw error;
             }
 
+            // Інші помилки перетворюємо на зрозумілу HTTP-помилку.
             if (error instanceof Error) {
                 console.error(
                     'Food analysis error:',
@@ -408,12 +434,14 @@ export class FoodAnalysisService {
                 );
             }
 
+            // Обробляємо помилки невідомого типу.
             throw new BadRequestException(
                 'Не вдалося проаналізувати їжу',
             );
         }
     }
 
+    // Повертає поточну дату з обнуленим часом.
     private getToday(): Date {
         const today = new Date();
 
@@ -427,23 +455,25 @@ export class FoodAnalysisService {
         return today;
     }
 
+    // Перевіряє формат дати та перетворює рядок YYYY-MM-DD у Date.
     private parseDate(value: string | undefined, field: string): Date {
         if (!value) {
             return this.getToday();
         }
 
         if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-            throw new BadRequestException(`${field} must use YYYY-MM-DD format`);
+            throw new BadRequestException(`${ field } must use YYYY - MM - DD format`);
         }
 
-        const date = new Date(`${value}T00:00:00.000Z`);
+        const date = new Date(`${ value } T00:00:00.000Z`);
         if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value) {
-            throw new BadRequestException(`${field} must be a valid date`);
+            throw new BadRequestException(`${ field } must be a valid date`);
         }
 
         return date;
     }
 
+    // Створює порожню структуру для накопичення харчових показників.
     private createEmptyTotals(): NutritionTotalsDto {
         return {
             calories: 0,
@@ -456,6 +486,7 @@ export class FoodAnalysisService {
         };
     }
 
+    // Додає показники одного прийому їжі до загальних підсумків.
     private addMealToTotals(
         totals: NutritionTotalsDto,
         meal: {
@@ -477,6 +508,7 @@ export class FoodAnalysisService {
         totals.sodium += meal.sodium ?? 0;
     }
 
+    // Округлює всі основні харчові показники до двох знаків після коми.
     private roundTotals(totals: NutritionTotalsDto): NutritionTotalsDto {
         return {
             calories: this.round(totals.calories),
@@ -489,25 +521,31 @@ export class FoodAnalysisService {
         };
     }
 
+    // Округлює число до двох знаків після коми.
     private round(value: number): number {
         return Math.round(value * 100) / 100;
     }
 
+    // Перевіряє, чи AI повернув усі обов'язкові поля та коректні типи даних.
     private validateAiResponse(
         response: FoodAnalysisResult,
     ): void {
+
+        // Перевіряємо наявність назви страви.
         if (!response.mealName) {
             throw new BadRequestException(
                 'Invalid AI response: missing mealName',
             );
         }
 
+        // Перевіряємо наявність типу прийому їжі.
         if (!response.mealType) {
             throw new BadRequestException(
                 'Invalid AI response: missing mealType',
             );
         }
 
+        // Перевіряємо, що AI визначив хоча б один продукт.
         if (
             !Array.isArray(
                 response.foodItems,
@@ -519,24 +557,28 @@ export class FoodAnalysisService {
             );
         }
 
+        // Перевіряємо наявність білків.
         if (!response.protein) {
             throw new BadRequestException(
                 'Invalid AI response: missing protein',
             );
         }
 
+        // Перевіряємо наявність жирів.
         if (!response.fat) {
             throw new BadRequestException(
                 'Invalid AI response: missing fat',
             );
         }
 
+        // Перевіряємо наявність вуглеводів.
         if (!response.carbohydrates) {
             throw new BadRequestException(
                 'Invalid AI response: missing carbohydrates',
             );
         }
 
+        // Перевіряємо, що загальна калорійність має числове значення.
         if (
             typeof response.totalCalories !==
             'number'
@@ -546,6 +588,7 @@ export class FoodAnalysisService {
             );
         }
 
+        // Перевіряємо, що AI повернув глікемічний індекс як число.
         if (
             typeof response.glycemicIndex !==
             'number'
@@ -555,6 +598,7 @@ export class FoodAnalysisService {
             );
         }
 
+        // Перевіряємо, що AI повернув числовий баланс макронутрієнтів.
         if (
             typeof response.macroBalance !==
             'number'
@@ -564,6 +608,7 @@ export class FoodAnalysisService {
             );
         }
 
+        // Перевіряємо, що AI повернув рівень впевненості як число.
         if (
             typeof response.overallConfidence !==
             'number'
@@ -573,6 +618,7 @@ export class FoodAnalysisService {
             );
         }
 
+        // Перевіряємо, що мікронутрієнти представлені масивом.
         if (
             !Array.isArray(
                 response.microNutrients,
@@ -583,6 +629,7 @@ export class FoodAnalysisService {
             );
         }
 
+        // Перевіряємо, що рекомендації/інсайти представлені масивом.
         if (
             !Array.isArray(
                 response.insights,
@@ -594,3 +641,4 @@ export class FoodAnalysisService {
         }
     }
 }
+

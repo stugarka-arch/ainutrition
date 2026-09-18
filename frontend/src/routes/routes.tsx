@@ -14,7 +14,7 @@ import NutritionSummary from "../components/NutritionSummary";
 export const publicRoutes = [
     { path: "/", label: "Головна", element: <HomePage /> },
     { path: "/auth", label: "Авторизація", element: <AuthPage /> },
-    { path: "/food-analysis", label: "Аналіз їжі", element: <FoodAnalysisPage /> },
+  
 
 ];
 
@@ -22,6 +22,7 @@ export const publicRoutes = [
 export const clientRoutes = [
     { path: "/dashboard-client", label: "Кабінет", element: <ClientPage /> },
     { path: "/nutrition-summary", label: "Підсумок харчування", element: <NutritionSummary /> },
+    { path: "/food-analysis", label: "Аналіз тарілки", element: <FoodAnalysisPage /> },
 ];
 
 

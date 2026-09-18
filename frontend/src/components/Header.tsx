@@ -3,11 +3,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { adminRoutes, clientRoutes, publicRoutes } from "../routes/routes";
 import { useAuthStore } from "../store/useAuthStore";
 
+
 import "./Header.scss";
+import { useEffect, useState } from "react";
 
 const Header = () => {
     const navigate = useNavigate();
-    const { isAuth, isLoading, logout } = useAuthStore();
+    const { isAuth, isLoading, logout, user } = useAuthStore();
+
 
     const handleAuthAction = async () => {
         if (!isAuth) {
@@ -18,6 +21,17 @@ const Header = () => {
         await logout();
         navigate("/");
     };
+    const [routes, setRoutes] = useState<any>([]);
+
+    useEffect(() => {
+        if (user?.role === "ADMIN") {
+            setRoutes([...publicRoutes, ...adminRoutes, ...clientRoutes]);
+        } else if (user?.role === "USER") {
+            setRoutes([...publicRoutes, ...clientRoutes]);
+        } else {
+            setRoutes(publicRoutes);
+        }
+    }, [user])
 
     return (
         <header className="header">
@@ -26,7 +40,13 @@ const Header = () => {
             </NavLink>
 
             <nav className="header__navigation" aria-label="Основна навігація">
-                {[...publicRoutes, ...clientRoutes, ...adminRoutes].map(({ path, label }) => (
+                {routes.filter(
+                    (route: any) =>
+                        !(
+                            route.label.includes("Авторизація") ||
+                            route.label.includes("Головна")
+                        )
+                ).map(({ path, label }) => (
                     <NavLink
                         key={path}
                         className={({ isActive }) =>
