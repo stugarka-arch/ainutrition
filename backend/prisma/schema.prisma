@@ -22,7 +22,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions Session[]
+  sessions            Session[]
   passwordResetTokens PasswordResetToken[]
 
   // Profile
@@ -69,7 +69,7 @@ model Session {
   expiresAt DateTime
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("sessions")
@@ -79,15 +79,15 @@ model Subscription {
   id     String @id @default(cuid())
   userId String @unique
 
-  user User @relation( fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  plan                 String   @default("free")
+  plan                 String    @default("free")
   stripeCustomerId     String?
   stripeSubscriptionId String?
   trialStartedAt       DateTime?
   trialEndsAt          DateTime?
   activeUntil          DateTime?
-  status               String   @default("inactive")
+  status               String    @default("inactive")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -100,7 +100,7 @@ model Meal {
   id     String @id @default(cuid())
   userId String
 
-  user User @relation(fields: [userId],references: [id],onDelete: Cascade )
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Basic information
   mealType String
@@ -159,7 +159,7 @@ model MealFoodItem {
   id     String @id @default(cuid())
   mealId String
 
-  meal Meal @relation( fields: [mealId], references: [id], onDelete: Cascade )
+  meal Meal @relation(fields: [mealId], references: [id], onDelete: Cascade)
 
   name           String
   estimatedGrams Float
@@ -176,12 +176,12 @@ model MealMicronutrient {
   id     String @id @default(cuid())
   mealId String
 
-  meal Meal @relation(fields: [mealId], references: [id], onDelete: Cascade )
+  meal Meal @relation(fields: [mealId], references: [id], onDelete: Cascade)
 
-  name                   String
-  value                  Float
-  unit                   String
-  percentageDailyValue   Float?
+  name                 String
+  value                Float
+  unit                 String
+  percentageDailyValue Float?
 
   createdAt DateTime @default(now())
 
@@ -194,7 +194,7 @@ model MealInsight {
   id     String @id @default(cuid())
   mealId String
 
-  meal Meal @relation(fields: [mealId],references: [id],onDelete: Cascade)
+  meal Meal @relation(fields: [mealId], references: [id], onDelete: Cascade)
 
   text String
 
@@ -208,7 +208,7 @@ model AnalysisLog {
   id     String @id @default(cuid())
   userId String
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade )
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   requestTime Int
   imageSize   Int
@@ -221,4 +221,52 @@ model AnalysisLog {
   @@index([userId])
   @@index([createdAt])
   @@map("analysis_logs")
+}
+
+
+model FoodKnowledge {
+  id             String   @id @default(uuid())
+  name           String   @unique
+  nameUk         String?
+  nameEn         String?
+
+  calories       Float?
+  protein        Float?
+  fat            Float?
+  carbohydrates  Float?
+  fiber          Float?
+  sugar          Float?
+
+  // Мікронутрієнти на 100 г продукту
+  vitaminA       Float?
+  vitaminC       Float?
+  calcium        Float?
+  iron           Float?
+  magnesium      Float?
+  potassium      Float?
+  sodium         Float?
+  vitaminB6      Float?
+  folate         Float?
+  vitaminB12     Float?
+
+  glycemicIndex  Float?
+  source         String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  aliases        FoodKnowledgeAlias[]
+}
+
+
+
+model FoodKnowledgeAlias {
+  id             String        @id @default(uuid())
+  foodKnowledgeId String
+  language       String
+  name           String
+  foodKnowledge  FoodKnowledge @relation(fields: [foodKnowledgeId], references: [id], onDelete: Cascade)
+
+  @@unique([language, name])
+  @@index([foodKnowledgeId])
 }

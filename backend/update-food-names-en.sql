@@ -1,0 +1,1 @@
+UPDATE "FoodKnowledge" SET "nameEn" = CASE "name" WHEN 'грчка' THEN 'buckwheat' WHEN 'гречана крупа' THEN 'buckwheat' WHEN 'вівсянка' THEN 'oats' WHEN 'buckwheat' THEN 'buckwheat' END WHERE "nameEn" IS NULL;

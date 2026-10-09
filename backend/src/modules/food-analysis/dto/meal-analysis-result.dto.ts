@@ -137,6 +137,26 @@ export class MealAnalysisResultDto {
     })
     totalCalories!: number;
 
+    // Fiber, sugar and sodium
+
+    @ApiProperty({
+        example: 4.5,
+        description: 'Загальна кількість клітковини в грамах',
+    })
+    fiber!: number;
+
+    @ApiProperty({
+        example: 8.2,
+        description: 'Загальна кількість цукрів у грамах',
+    })
+    sugar!: number;
+
+    @ApiProperty({
+        example: 450,
+        description: 'Загальна кількість натрію в міліграмах',
+    })
+    sodium!: number;
+
     // Micronutrients
 
     @ApiProperty({
